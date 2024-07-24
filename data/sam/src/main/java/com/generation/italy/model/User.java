@@ -33,6 +33,16 @@ public class User {
 	@ManyToOne
 	@JoinColumn(name = "role_id")
 	private Role role;
+	
+	private Long project_id;
+	
+	public Long getProject_id() {
+		return project_id;
+	}
+
+	public void setProject_id(Long project_id) {
+		this.project_id = project_id;
+	}
 
 	public Long getId() {
 		return id;
