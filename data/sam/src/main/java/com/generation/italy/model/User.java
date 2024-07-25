@@ -1,5 +1,7 @@
 package com.generation.italy.model;
 
+import java.util.Set;
+
 import org.hibernate.validator.constraints.Length;
 
 import jakarta.persistence.Column;
@@ -8,11 +10,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
+@Table(name="users")
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,15 +39,8 @@ public class User {
 	@JoinColumn(name = "role_id")
 	private Role role;
 	
-	private Long project_id;
-	
-	public Long getProject_id() {
-		return project_id;
-	}
-
-	public void setProject_id(Long project_id) {
-		this.project_id = project_id;
-	}
+	@ManyToMany(mappedBy = "projectUsers")
+	private Set<Project> joinedProjects;
 
 	public Long getId() {
 		return id;
