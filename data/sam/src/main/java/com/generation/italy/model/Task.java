@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,12 +22,27 @@ public class Task {
 	
 
 	@NotBlank
-	private String task_name, task_desc, task_status;
+	private String task_name, task_desc;
 	
 	@NotNull
-	private Long project_id, owner_id, user_id;
+	private Long project_id, owner_id;
+	
+	private Long user_id;
 	
 	private LocalDate start_date, end_date, completion_date;
+	
+	@ManyToOne
+	@JoinColumn(name= "status_id")
+	private Status status;
+	
+	
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
 
 	public Long getId() {
 		return id;
@@ -51,14 +68,7 @@ public class Task {
 		this.task_desc = task_desc;
 	}
 
-	public String getTask_status() {
-		return task_status;
-	}
-
-	public void setTask_status(String task_status) {
-		this.task_status = task_status;
-	}
-
+	
 	public Long getProject_id() {
 		return project_id;
 	}
