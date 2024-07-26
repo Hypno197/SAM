@@ -3,10 +3,15 @@ package com.generation.italy.service;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.generation.italy.model.Role;
 import com.generation.italy.model.Token;
+import com.generation.italy.model.User;
 import com.generation.italy.repository.TokenRepository;
+import com.generation.italy.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -25,7 +30,8 @@ public class TokenService {
 
     @Autowired
     private TokenRepository tokenRepository;
-
+    @Autowired
+    private UserRepository userRepository;
     // Crea e salva un nuovo token per un utente
     public Token createToken(Long user_id) {
         Token token = new Token();
@@ -54,6 +60,13 @@ public class TokenService {
     	 * */
         return java.util.UUID.randomUUID().toString();
     }
+    
+    public Role checkLogged(String token) {
+    	Token userToken = tokenRepository.findByToken(token);
+    	User loggedUser = userRepository.findById(userToken.getUser_id()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
+    	return loggedUser.getRole();	
+    }
 }
+
 
 

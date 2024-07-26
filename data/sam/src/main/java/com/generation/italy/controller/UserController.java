@@ -36,7 +36,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@RequestHeader("Authorization") String token,@PathVariable(value = "id") Long userId) {
+    public ResponseEntity<User> getUserById(@PathVariable(value = "id") Long userId) {
         Optional<User> user = userService.getUserById(userId);
         if(user.isPresent()) {
             return ResponseEntity.ok().body(user.get());
