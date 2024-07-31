@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.A.M.</title>
+    <!-- mini icona pagina web -->
+    <link rel="icon" href="img/Favicon.svg" type="image/x-icon" />
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/homepage_style.css">
+    <link rel="stylesheet" href="css/task.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+
+<body style="background-color: rgba(71, 38, 101, 0.59);">
+
+    <nav class="main-menu">
+        <header class="avatar">
+            <img src="img/bg_home.jpg" alt="Avatar" />
+        </header>
+        <ul>
+            <li>
+                <a href="hp_manager.html">
+                    <i class="fa fa-home"></i>
+                    <span class="nav-text">
+                        Pagina Manager
+                    </span>
+                </a>
+            </li>
+
+            <li class="has-subnav">
+                <a href="manager_project.html">
+                    <i class="fa fa-globe"></i>
+                    <span class="nav-text">
+                        I miei progetti <!-- card con progetti attuali (rimanda alle task) / passati -->
+                    </span>
+                </a>
+            </li>
+
+            <li class="has-subnav">
+                <a href="manager_task.html">
+                    <i class="fa fa-book"></i>
+                    <span class="nav-text">
+                        Assegna task
+                    </span>
+                </a>
+
+            </li>
+
+            <li class="has-subnav">
+                <a href="#">
+                    <i class="fa fa-comments"></i>
+
+                    <span class="nav-text">
+                        Le mie note <!-- storico note inserite dalle task / progetto -->
+                    </span>
+                </a>
+
+            </li>
+
+            <li>
+                <a href="#">
+                    <i class="fa fa-film"></i>
+                    <span class="nav-text">
+                        Milestones <!-- storico delle milestones inserite dal manager x progetto attivo -->
+                    </span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <i class="fa fa-bars"></i>
+                    <span class="nav-text">
+                        Reportistica
+                    </span>
+                </a>
+            </li>
+
+            <li>
+                <a href="manager_planner.html">
+                    <i class="fa fa-cogs"></i>
+                    <span class="nav-text">
+                        Planner
+                    </span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <i class="fa fa-map-marker"></i>
+                    <span class="nav-text">
+                        Classifica
+                    </span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <i class="fa fa-user"></i>
+                    <span class="nav-text">
+                        Il mio profilo
+                    </span>
+                </a>
+            </li>
+
+        </ul>
+
+        <ul class="logout">
+            <li>
+                <a href="#">
+                    <i class="fa fa-info"></i>
+                    <span class="nav-text">
+                        Help
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa fa-power-off"></i>
+                    <span class="nav-text">
+                        Logout
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="contenitore">
+        <h1 class="ms-5 mt-5 mb-5" id="benvenuto">Assegna nuove task</h1>
+    </div>
+
+    <!-- to do list -->
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-md-6">
+            <div class="card-hover-shadow-2x mb-3 card todo-container">
+                <div class="card-header-tab card-header">
+                    <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+                        <i class="fa fa-check fa-2x"></i>&nbsp;Task List
+                    </div>
+                </div>
+                <div class="scroll-area-sm">
+                    <perfect-scrollbar class="ps-show-limits">
+                        <div style="position: static;" class="ps ps--active-y">
+                            <div class="ps-content">
+                                <ul class="list-group list-group-flush" id="task-list">
+                                    <!-- task dinamiche qui -->
+                                </ul>
+                            </div>
+                        </div>
+                    </perfect-scrollbar>
+                </div>
+                <div class="d-block text-right card-footer">
+                    <button class="btn btn-primary" onclick="showAddTaskModal()">Aggiungi Task</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- aggiunta Task Modal -->
+    <div class="modal" id="addTaskModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddTaskModal()">&times;</span>
+            <h2>Add Task</h2>
+
+            <form id="addTaskForm">
+                <label for="newTaskName">Nome Task:</label>
+                <input type="text" id="newTaskName" name="taskName" required>
+
+                <label for="newTaskDescription">Descrizione:</label>
+                <input type="text" id="newTaskDescription" name="taskDescription">
+                <br>
+                <label for="newTaskPriority">Priorità:</label>
+                <select id="newTaskPriority" name="taskPriority">
+                </select>
+                <br>
+                <label for="newTaskEndDate">Deadline:</label>
+                <input type="date" name="taskEndDate" id="newTaskEndDate">
+                <br>
+                <label for="newTaskProjectID">Progetto:</label>
+                <select name="newTaskProjectID" id="newTaskProjectID" value="0">
+
+                </select>
+                <br>
+                <label for="taskUserID">Consulente:</label>
+                <select name="taskUserID" disabled id="newTaskUserID">
+
+                </select>
+                <br>
+                <button type="submit">Aggiungi Task</button>
+
+            </form>
+        </div>
+    </div>
+    </div>
+
+<!--  modal cambia status-->
+    <div class="modal" id="changePriorityModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeUpdateTaskModal()">&times;</span>
+        <form>
+            <label for="changePrioritySelect">Priorità: </label>
+            <select name="changePrioritySelect" id="changePrioritySelect"></select>
+            <button type="submit" class="btn btn-secondary" onclick="closeChangePriorityModal()">Conferma</button>
+        </form>
+        </div>
+    </div>
+    <!--  modal assegna consulente-->
+    <div class="modal" id="assignUserModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeUpdateTaskModal()">&times;</span>
+        <form>
+            <label for="assignUserSelect">Assegna utente</label>
+            <select name="assignUserSelect" id="assignUserSelect"></select>
+            <button type="submit" class="btn btn-secondary" onclick="closeAssignUserModal()">Conferma</button>
+
+        </form>
+        </div>
+    </div>
+
+    <!--  modal aggiorna task -->
+    <div class="modal" id="updateTaskModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeUpdateTaskModal()">&times;</span>
+            <h2>Aggiorna questa  Task</h2>
+            <form id="updateTaskForm">
+                <label for="newTaskName">Nome Task:</label>
+                <input type="text" id="updateTaskName" name="updateTaskName" required>
+
+                <label for="newTaskDescription">Descrizione:</label>
+                <input type="text" id="updateTaskDescription" name="updateTaskDescription">
+                <br>
+                <label for="newTaskPriority">Priorità:</label>
+                <select id="updateTaskPriority" name="updateTaskPriority">
+                </select>
+                <br>
+                <label for="newTaskEndDate">Deadline:</label>
+                <input type="date" name="updateTaskEndDate" id="updateTaskEndDate">
+                <br>
+                <br>
+                <br>
+                <button type="submit">modifica Task</button>
+
+            </form>
+        </div>
+    </div>
+    <!-- footer -->
+    <div class="container">
+        <footer class="d-flex flex-wrap justify-content-between py-3 my-4 border-top"
+            style="background-color: transparent;">
+            <div class="col-md-4 d-flex align-items-center">
+                <span class="mb-3 mb-md-0 text-body-secondary footer-text">©️ 2024 S.A.M., Inc</span>
+            </div>
+            <div class="col-md-4 d-flex justify-content-end">
+                <a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
+                    <img src="img/s.a.m..svg" alt="Logo" width="60" height="60" class="me-2">
+                </a>
+            </div>
+        </footer>
+
+
+        <script src="js/bootstrap.bundle.min.js"></script>
+        <script src="js/task.js"></script>
+
+</body>
+
+</html>

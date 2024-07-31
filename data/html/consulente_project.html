@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.A.M.</title>
+    <!-- mini icona pagina web -->
+    <link rel="icon" href="img/Favicon.svg" type="image/x-icon" />
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/homepage_style.css">
+    <link rel="stylesheet" href="css/hp_consulente.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+
+<body style="background-color: #40832bd0;">
+    <nav class="main-menu">
+        <header class="avatar">
+            <img src="img/bg_home.jpg" alt="Avatar" />
+        </header>
+        <ul>
+            <li>
+                <a href="hp_consulente.html">
+                    <i class="fa fa-home"></i>
+                    <span class="nav-text">
+                        Pagina Consulente
+                    </span>
+                </a>
+              
+            </li>
+            <li class="has-subnav">
+                <a href="#">
+                    <i class="fa fa-globe"></i>
+                    <span class="nav-text">
+                        I miei progetti <!-- card con progetti attuali (rimanda alle task) / passati -->
+                    </span>
+                </a>
+                
+            </li>
+            <li class="has-subnav">
+                <a href="#">
+                    <i class="fa fa-book"></i>
+                    <span class="nav-text">
+                        Le mie task <!-- stato di avanzamento -->
+                    </span>
+                </a>
+                
+            </li>
+            <li class="has-subnav">
+                <a href="#">
+                    <i class="fa fa-comments"></i>
+                   
+                    <span class="nav-text">
+                        Le mie note <!-- storico note inserite dalle task / progetto -->
+                    </span>
+                </a>
+               
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa fa-film"></i>
+                    <span class="nav-text">
+                        Milestones <!-- storico delle milestones inserite dal manager x progetto attivo -->
+                    </span>
+                </a>
+            </li>
+            
+            <li>
+               <a href="consulente_planner.html">
+                   <i class="fa fa-cogs"></i>
+                    <span class="nav-text">
+                        Planner
+                    </span>
+                </a>
+            </li>
+            <li>
+               <a href="#">
+                    <i class="fa fa-map-marker"></i>
+                    <span class="nav-text">
+                        Classifica
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa fa-user"></i>  
+                    <span class="nav-text">
+                    Il mio profilo
+                    </span>
+                </a>
+            </li>
+            
+        </ul>
+
+        <ul class="logout">
+            <li>
+                <a href="#">
+                    <i class="fa fa-info"></i>  
+                    <span class="nav-text">
+                        Help
+                        </span>                
+                </a>
+            </li>
+            <li>
+               <a href="#">
+                     <i class="fa fa-power-off"></i>
+                    <span class="nav-text">
+                        Logout
+                    </span>
+                </a>
+            </li>  
+        </ul>
+    </nav>
+
+    <div class="container mt-5">
+        <h1 class="ms-5 mb-5" id="benvenuto">I miei progetti</h1>
+        <div class="row">
+            <div class="col-lg-6 col-md-8 col-sm-12">
+                <div class="ag-format-container">
+                    <div class="ag-courses_box justify-content-center">
+                        <div class="ag-courses_item active">
+                            <div class="ag-courses-item_link" onclick="toggleDetails(event, 'details1')">
+                                <div class="ag-courses-item_bg"></div>
+                                <div class="ag-courses-item_title">
+                                    Progetto attuale
+                                </div>
+                                <div class="ag-courses-item_date-box">
+                                    start - deadline:
+                                    <span class="ag-courses-item_date">
+                                        26.07.2024 - 02.09.2024
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="ag-courses-item_details" id="details1">
+                                <p>Dettagli del progetto: <br>
+                                    Obiettivi: raggiungimento pubblico più ampio <br>
+                                    Modalità utilizzate: remote work
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- accordion progetti passati -->
+            
+            <div class="col-lg-6 col-md-8 col-sm-12">
+                <div class="accordion-container">
+                  <div class="accordion">
+                    <div class="accordion__item">
+                      <div class="accordion__item-content">
+                        <div class="accordion__item-title">Progetto concluso 1</div>
+                        <div class="accordion__item-details">Dettagli del progetto 1</div>
+                      </div>
+                    </div>
+                    <div class="accordion__item">
+                      <div class="accordion__item-content">
+                        <div class="accordion__item-title">Progetto concluso 2</div>
+                        <div class="accordion__item-details">Dettagli del progetto 2</div>
+                      </div>
+                    </div>
+                    <div class="accordion__item">
+                      <div class="accordion__item-content">
+                        <div class="accordion__item-title">Progetto concluso 3</div>
+                        <div class="accordion__item-details">Dettagli del progetto 3</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+
+        </div>
+    </div>
+    
+    
+    
+    
+      
+      
+  <!-- footer -->
+<div class="container">
+    <footer class="d-flex flex-wrap justify-content-between py-3 my-4 border-top" style="background-color: transparent;">
+        <div class="col-md-4 d-flex align-items-center">
+            <span class="mb-3 mb-md-0 text-body-secondary footer-text">©️ 2024 S.A.M., Inc</span>
+        </div>
+        <div class="col-md-4 d-flex justify-content-end">
+            <a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
+                <img src="img/s.a.m..svg" alt="Logo" width="60" height="60" class="me-2"> 
+            </a>
+        </div>
+    </footer>
+</div>
+
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/hp_consulente.js"></script>
+</body>
+
+</html>
+  

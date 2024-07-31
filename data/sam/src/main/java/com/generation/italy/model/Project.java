@@ -1,6 +1,7 @@
 package com.generation.italy.model;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.Entity;
@@ -46,7 +47,7 @@ public class Project {
 	@JoinTable(name="project_users",
 	joinColumns = @JoinColumn(name="project_id"),
 	inverseJoinColumns = @JoinColumn(name ="user_id"))
-	private Set<User> projectUsers;
+	private List<User> projectUsers;
 
 	public Long getId() {
 		return id;
@@ -128,12 +129,13 @@ public class Project {
 		this.user = user;
 	}
 
-	public Set<User> getProjectUsers() {
+	public List<User> getProjectUsers() {
 		return projectUsers;
 	}
 
-	public void setProjectUsers(Set<User> projectUsers) {
+	public void setProjectUsers(List<User> projectUsers) {
 		this.projectUsers = projectUsers;
 	}
+
 	
 }

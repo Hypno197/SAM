@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.A.M.</title>
+    <!-- mini icona pagina web -->
+    <link rel="icon" href="img/Favicon.svg" type="image/x-icon" />
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/index_style.css">
+</head>
+
+<body>
+    <!-- inizio pagina benvenuto / accesso -->
+    <main class="container">
+        <div class="sez-immagine-bg">
+
+            <div class="gif-overlay">
+                <img src="img/s.a.m..svg" alt="Animated GIF">
+            </div>
+
+            <div class="typewriter">
+                <h1 id="typewriterText">
+                    <span id="staticText" class="static-text"></span><br>
+                    <span id="dynamicText" class="gradient-text"></span><span class="caret"></span>
+                </h1>
+            </div>
+            <div class="bottoni-szn mt-4">
+                <button type="button" class="button-home btn-primary rounded-pill" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvas" aria-controls="offcanvas">Login</button>
+                <button type="button" class="button-home btn-primary rounded-pill" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvas2" aria-controls="offcanvas2">Registrati</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- offcanvas per login/accesso -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasLabel">Accesso</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" class="form-control" id="emailLogin" placeholder="Inserisci la tua email">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="passwordLogin" placeholder="Inserisci la tua password">
+                </div>
+                <button class="nav-link button-home active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login"
+                    type="submit" role="tab" aria-controls="login" aria-selected="true">Accedi</button>
+            </form>
+            <h5 class="text-center" id="message"></h5>
+        </div>
+    </div>
+
+    <!-- offcanvas x registrazione -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas2" aria-labelledby="offcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasLabel">Registrati</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form id="registerForm">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Nome</label>
+                    <input type="text" class="form-control" id="name" placeholder="Inserisci il tuo nome">
+                </div>
+                <div class="mb-3">
+                    <label for="surname" class="form-label">Cognome</label>
+                    <input type="text" class="form-control" id="surname" placeholder="Inserisci il tuo cognome">
+                </div>
+                <div class="mb-3">
+                    <label for="role" class="form-label">Ruolo</label>
+                    <select class="form-control" id="role" name="role">
+                        <option value="" disabled selected>Seleziona un ruolo</option>
+                        <option value="manager">Manager</option>
+                        <option value="consulente">Consulente</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" class="form-control" id="email" placeholder="Inserisci l'email che vuoi usare">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Inserisci la password">
+                </div>
+                <button class="nav-link button-home" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button"
+                    role="tab" aria-controls="register" aria-selected="false">Registrati</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/index.js"></script>
+</body>
+
+</html>

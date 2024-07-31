@@ -1,8 +1,8 @@
 package com.generation.italy.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +13,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.generation.italy.exception.UnauthorizedException;
 import com.generation.italy.model.Task;
-import com.generation.italy.repository.StatusRepository;
+import com.generation.italy.model.User;
 import com.generation.italy.repository.TaskRepository;
 import com.generation.italy.service.TaskService;
+import com.generation.italy.service.TokenService;
+import com.generation.italy.service.UserService;
 
 import jakarta.validation.Valid;
 
@@ -29,43 +33,95 @@ import jakarta.validation.Valid;
 @CrossOrigin
 public class TaskController {
 
-    @Autowired
-    private TaskService taskService;
+	@Autowired
+	private TaskService taskService;
 
-    @GetMapping
-    public List<Task> getAllTasks() {
-        return taskService.getAllTasks();
-    }
+	@Autowired
+	private UserService userService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable(value = "id") Long taskId) {
-        Task task = taskService.getTaskById(taskId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found for this id :: " + taskId));
-        return ResponseEntity.ok().body(task);
-    }
+	@Autowired
+	private TokenService tokenService;
 
-    @PostMapping
-    public Task createTask(@Valid @RequestBody Task task) {
-        return taskService.createTask(task);
-    }
+	@GetMapping
+	public List<Task> getAllTasks() {
+		return taskService.getAllTasks();
+	}
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable(value = "id") Long taskId, @Valid @RequestBody Task taskDetails) {
-        Task task = taskService.getTaskById(taskId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found for this id :: " + taskId));
-        Task updatedTask = taskService.updateTask(taskId, taskDetails);
-        return ResponseEntity.accepted().body(updatedTask);
-    }
+	@GetMapping("/manager")
+	public List<Task> getManagerTasks(@RequestHeader String token) {
+		User user = userService.getUserById(tokenService.findByToken(token).getUser_id())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found for this id"));
+		if (user != null && user.getRole().getIsAdmin()) {
+			return taskService.getAllTasks();
+		} else
+			throw new UnauthorizedException();
+	}
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable(value = "id") Long taskId) {
-        Task task = taskService.getTaskById(taskId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found for this id :: " + taskId));
-        taskService.deleteTask(taskId);
-        return ResponseEntity.ok().<Void>build();
-    }
-    
-    @PostMapping("/changestatus")
-    public ResponseEntity<Task> changeStatus(@PathVariable(value="task_id") Long taskId,@PathVariable(value="status_id") Long statusID) {
-    	return new ResponseEntity<Task>(taskService.setStatus(taskId, statusID), HttpStatus.ACCEPTED);
-    }
-    	
+	@GetMapping("/{id}")
+	public ResponseEntity<Task> getTaskById(@PathVariable(value = "id") Long taskId) {
+		Task task = taskService.getTaskById(taskId).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found for this id :: " + taskId));
+		return ResponseEntity.ok().body(task);
+	}
+
+	@PostMapping
+	public Task createTask(@RequestHeader String token, @RequestBody Task task) {
+		User user = userService.getUserById(tokenService.findByToken(token).getUser_id())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found for this id"));
+		if (user != null && user.getRole().getIsAdmin()) {
+			task.setOwner_id(user.getId());
+			task.setStart_date(LocalDate.now());
+			System.out.println(task.toString());
+			return taskService.createTask(task);
+		} else
+			throw new UnauthorizedException();
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<Task> updateTask(@PathVariable(value = "id") Long taskId,@RequestBody Task taskDetails) {
+		Task task = taskService.getTaskById(taskId).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found for this id :: " + taskId));
+		Task updatedTask = taskService.updateTask(taskId, taskDetails);
+		return ResponseEntity.accepted().body(updatedTask);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteTask(@RequestHeader String token, @PathVariable(value = "id") Long taskId) {
+		User user = userService.getUserById(tokenService.findByToken(token).getUser_id())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found for this id"));
+		if (user != null && user.getRole().getIsAdmin()) {
+		Task task = taskService.getTaskById(taskId).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found for this id :: " + taskId));
+		taskService.deleteTask(taskId);
+		return ResponseEntity.ok().<Void>build();
+		} else
+			throw new UnauthorizedException();
+	}
+
+	@PutMapping("/changestatus/{task_id}/{status_id}")
+	public ResponseEntity<Task> changeStatus(@PathVariable(value = "task_id") Long taskId,
+			@PathVariable(value = "status_id") Long statusID) {
+		return new ResponseEntity<Task>(taskService.setStatus(taskId, statusID), HttpStatus.ACCEPTED);
+	}
+	
+	@GetMapping("/complete/{id}")
+	public ResponseEntity<Task> completeTask(@RequestHeader String token, @PathVariable Long id) {
+		User user = userService.getUserById(tokenService.findByToken(token).getUser_id())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found for this id"));
+		if (user != null && user.getRole().getIsAdmin()) {
+			return ResponseEntity.ok().body(taskService.setCompletion(id));			
+	}else
+		throw new UnauthorizedException();
+	}		
+	@PutMapping("/assign/{id}/{userID}")
+	public ResponseEntity<Task> assignTask(@RequestHeader String token, @PathVariable (value = "id") Long taskID, @PathVariable (value = "userID")Long userID){
+		User user = userService.getUserById(tokenService.findByToken(token).getUser_id())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found for this id"));
+		if (user != null && user.getRole().getIsAdmin()) {
+			return ResponseEntity.ok().body(taskService.assignUser(taskID, userID));
+	}else
+		throw new UnauthorizedException();
+		
+		
+	}
 }

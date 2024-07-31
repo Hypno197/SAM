@@ -8,5 +8,5 @@ import com.generation.italy.model.Task;
 
 @Repository
 public interface StatusRepository extends JpaRepository<Status, Long>{
-
+	Status findByStatus (String status);
 }

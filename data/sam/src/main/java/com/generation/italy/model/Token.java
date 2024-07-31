@@ -2,12 +2,15 @@ package com.generation.italy.model;
 
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name="tokens")
@@ -19,7 +22,14 @@ public class Token {
     private String token;
     private Long user_id;
     private Date createdDate;
+    private Boolean isAdmin;
     
+	public Boolean getIsAdmin() {
+		return isAdmin;
+	}
+	public void setIsAdmin(Boolean isAdmin) {
+		this.isAdmin = isAdmin;
+	}
 	public Long getId() {
 		return id;
 	}

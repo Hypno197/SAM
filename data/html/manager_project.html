@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.A.M.</title>
+    <!-- mini icona pagina web -->
+    <link rel="icon" href="img/Favicon.svg" type="image/x-icon" />
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/homepage_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+
+<body style="background-color: rgba(71, 38, 101, 0.59);">
+<script src="js/manager_project.js">
+    
+</script>
+    <nav class="main-menu">
+        <header class="avatar">
+            <img src="img/bg_home.jpg" alt="Avatar" />
+        </header>
+        <ul> 
+            <li>
+                <a href="hp_manager.html">
+                    <i class="fa fa-home"></i>
+                    <span class="nav-text">
+                        Pagina Manager
+                    </span>
+                </a>
+            </li>
+
+            <li class="has-subnav">
+                <a href="manager_project.html">
+                    <i class="fa fa-globe"></i>
+                    <span class="nav-text">
+                        I miei progetti <!-- card con progetti attuali (rimanda alle task) / passati -->
+                    </span>
+                </a>
+            </li>
+
+            <li class="has-subnav">
+                <a href="manager_task.html">
+                    <i class="fa fa-book"></i>
+                    <span class="nav-text">
+                       Assegna task 
+                    </span>
+                </a>
+                
+            </li>
+
+            <li class="has-subnav">
+                <a href="#">
+                    <i class="fa fa-comments"></i>
+                   
+                    <span class="nav-text">
+                        Le mie note <!-- storico note inserite dalle task / progetto -->
+                    </span>
+                </a>
+               
+            </li>
+
+            <li>
+                <a href="#">
+                    <i class="fa fa-film"></i>
+                    <span class="nav-text">
+                        Milestones <!-- storico delle milestones inserite dal manager x progetto attivo -->
+                    </span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <i class="fa fa-bars"></i>
+                    <span class="nav-text">
+                    Reportistica
+                    </span>
+                </a>
+            </li>
+            
+            <li>
+               <a href="manager_planner.html">
+                   <i class="fa fa-cogs"></i>
+                    <span class="nav-text">
+                        Planner
+                    </span>
+                </a>
+            </li>
+
+            <li>
+               <a href="#">
+                    <i class="fa fa-map-marker"></i>
+                    <span class="nav-text">
+                        Classifica
+                    </span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <i class="fa fa-user"></i>  
+                    <span class="nav-text">
+                    Il mio profilo
+                    </span>
+                </a>
+            </li>
+            
+        </ul>
+
+        <ul class="logout">
+            <li>
+                <a href="#">
+                    <i class="fa fa-info"></i>  
+                    <span class="nav-text">
+                        Help
+                        </span>                
+                </a>
+            </li>
+            <li>
+               <a href="#">
+                     <i class="fa fa-power-off"></i>
+                    <span class="nav-text">
+                        Logout
+                    </span>
+                </a>
+            </li>  
+        </ul>
+    </nav>
+
+    <div class="contenitore">
+        <h1 class="ms-5 mt-5 mb-5" id="benvenuto">Crea un nuovo progetto</h1>
+    </div>
+  
+    <h1>I tuoi progetti</h1>
+    <table id="destinazioni-table">
+        <thead>
+            <tr>
+                <th>Titolo</th>
+                <th>Descrizione</th>
+                <th>Consulenti</th>
+                <th>Azioni</th>
+            </tr>
+        </thead>
+        <tbody>
+asd
+        </tbody>
+    </table>
+
+    <h2>Aggiungi/Modifica Progetto</h2>
+    <form id="progetto-form">
+        <input type="hidden" id="progetto-id">
+        <label for="nomeProgetto">Titolo:</label>
+        <input type="text" id="nomeProgetto" name="nomeProgetto"><br>
+        <label for="descrizione">Descrizione:</label>
+        <input type="text" id="descrizione" name="descrizione"><br>
+        <label for="consulenti">Consulenti:</label>
+        <input type="text" id="consulenti" name="consulenti"><br>
+
+        <button type="submit">Salva</button>
+    </form>
+
+
+      <style>
+        /* Titoli */
+        h1, h2 {
+            color: #000000;
+            text-align: center;
+        }
+        
+        /* Stile della tabella */
+        #destinazioni-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        #destinazioni-table thead {
+            background-color: #2bcb1cb0;
+            color: white;
+        }
+        
+        #destinazioni-table th, #destinazioni-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #dddddd;
+        }
+        
+        #destinazioni-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+    
+        /* Stile del form */
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-width: 500px;
+            margin: 20px auto;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        form input[type="text"],
+        form input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        form button {
+            background-color: rgb(58, 186, 41);
+            color: rgb(0, 0, 0);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        form button:hover {
+            background-color: #257709bd;
+        }
+        </style>
+
+      <!-- footer -->
+<div class="container">
+    <footer class="d-flex flex-wrap justify-content-between py-3 my-4 border-top" style="background-color: transparent;">
+        <div class="col-md-4 d-flex align-items-center">
+            <span class="mb-3 mb-md-0 text-body-secondary footer-text">©️ 2024 S.A.M., Inc</span>
+        </div>
+        <div class="col-md-4 d-flex justify-content-end">
+            <a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
+                <img src="img/s.a.m..svg" alt="Logo" width="60" height="60" class="me-2"> 
+            </a>
+        </div>
+    </footer>
+
+
+<script src="js/bootstrap.bundle.min.js"></script>
+</body>
+
+
+</html>

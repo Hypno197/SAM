@@ -1,5 +1,6 @@
 package com.generation.italy.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,8 +11,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.generation.italy.model.Status;
 import com.generation.italy.model.Task;
+import com.generation.italy.model.User;
 import com.generation.italy.repository.StatusRepository;
 import com.generation.italy.repository.TaskRepository;
+import com.generation.italy.repository.UserRepository;
 
 @Service
 public class TaskService {
@@ -21,6 +24,10 @@ public class TaskService {
 
     @Autowired
     private StatusRepository statusRepository;
+    @Autowired
+    private UserRepository userRepository;
+    
+    
     
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
@@ -42,12 +49,7 @@ public class TaskService {
         Task task = taskRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found for this id :: " + id));
         task.setTask_name(taskDetails.getTask_name());
         task.setTask_desc(taskDetails.getTask_desc());
-        task.setProject_id(taskDetails.getProject_id());
-        task.setOwner_id(taskDetails.getOwner_id());
-        task.setUser_id(taskDetails.getUser_id());
-        task.setStart_date(taskDetails.getStart_date());
         task.setEnd_date(taskDetails.getEnd_date());
-        task.setCompletion_date(taskDetails.getCompletion_date());
         task.setStatus(taskDetails.getStatus());
         return taskRepository.save(task);
     }
@@ -58,6 +60,19 @@ public class TaskService {
     	task.setStatus(status);
     	return taskRepository.save(task);
     	
-
+    	
     }
-}
+    public Task setCompletion(Long id) {
+		Task task = taskRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found for this ID: " + id));
+		task.setCompletion_date(LocalDate.now());
+		Status status = statusRepository.findByStatus("completata");    	
+		task.setStatus(status);
+		return taskRepository.save(task);
+	}
+    
+    public Task assignUser(Long id, Long userID) {
+	Task task = taskRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found for this ID: " + id));
+    task.setUser_id(userID);
+    return taskRepository.save(task);
+    }
+    }

@@ -35,7 +35,9 @@ public class TokenService {
     // Crea e salva un nuovo token per un utente
     public Token createToken(Long user_id) {
         Token token = new Token();
+        User user = userRepository.findById(user_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found for this id :: " + user_id));
         token.setUser_id(user_id);
+        token.setIsAdmin(user.getRole().getIsAdmin());
         token.setToken(generateToken());
         token.setCreatedDate(new Date());
         return tokenRepository.save(token);
