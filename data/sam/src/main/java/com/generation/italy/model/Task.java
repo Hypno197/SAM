@@ -2,6 +2,7 @@ package com.generation.italy.model;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,9 +26,13 @@ public class Task {
 	private String task_name, task_desc;
 	
 	@NotNull
-	private Long project_id, owner_id;
+	private Long project_id;
 	
-	private Long user_id;
+	@Column(name = "owner_id")
+	private Long ownerID;
+	
+	@Column(name = "user_id")
+	private Long userID;
 	
 	private LocalDate start_date, end_date, completion_date;
 	
@@ -77,20 +82,21 @@ public class Task {
 		this.project_id = project_id;
 	}
 
-	public Long getOwner_id() {
-		return owner_id;
+
+	public Long getOwnerID() {
+		return ownerID;
 	}
 
-	public void setOwner_id(Long owner_id) {
-		this.owner_id = owner_id;
+	public void setOwnerID(Long ownerID) {
+		this.ownerID = ownerID;
 	}
 
-	public Long getUser_id() {
-		return user_id;
+	public Long getUserID() {
+		return userID;
 	}
 
-	public void setUser_id(Long user_id) {
-		this.user_id = user_id;
+	public void setUserID(Long userID) {
+		this.userID = userID;
 	}
 
 	public LocalDate getStart_date() {

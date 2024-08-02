@@ -5,12 +5,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import com.generation.italy.controller.AuthController;
-import com.generation.italy.model.Token;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 @Component
 public class RequestInterceptor implements HandlerInterceptor { 

@@ -1,12 +1,8 @@
-
+// script.js
+ 
 // Define an array to store events
 let events = [];
- /*
- riempire array per call
- if user isadmin riempe tramite user id
- else riempe tramite progetto */
-
-
+ 
 // letiables to store event input fields and reminder list
 let eventDateInput =
     document.getElementById("eventDate");

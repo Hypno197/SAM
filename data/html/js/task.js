@@ -132,20 +132,30 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="widget-subheading">${taskDescription}</div>
             </div>
             <div class="widget-content-right">
-            <div class="dropdown-center">
-            <button class="btn btn-outline-secondary border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="dropdown-center" id="dropdown">
+
+            <button class="btn btn-outline-secondary border-0"  type="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="fa-solid fa-ellipsis"></i></button>
-            <ul class="dropdown-menu">
-            <li>
+            
             <button class="ms-2 border-0 btn-transition btn btn-outline-secondary" onclick="showUpdateTaskModal(${taskID},${taskProjectID}, ${taskUserID})">
             <i class="fa-regular fa-pen-to-square"></i>   
             </button>
+            
+            <ul class="dropdown-menu">
+            <li>
+            
             <button class="ms-1 border-0 btn-transition btn btn-outline-success" onclick=" showChangePriorityModal(${taskID})">
-            <i class="fa-solid fa-check"></i>                    </button>
-            <button class="ms-1 border-0 btn-transition btn btn-outline-warning" onclick="showAssignUserModal(${taskID},${taskProjectID})">
+       <i class="fa-solid fa-clock-rotate-left"></i>               </button>
+            
+       <button class="ms-1 border-0 btn-transition btn btn-outline-warning" onclick="showAssignUserModal(${taskID},${taskProjectID})">
             <i class="fa-solid fa-user-pen"></i>
             </button>
-            </li>
+       
+            <button class="ms-1 border-0 btn-transition btn btn-outline-danger" onclick="unassignUser(${taskID})">
+        <i class="fa-solid fa-user-minus"></i>    
+    </button>
+       
+    </li>
             </ul>
             <button class="border-0 btn-transition btn btn-outline-danger" onclick="deleteTask(${taskID})">
             <i class="fa-solid fa-trash-can"></i>
@@ -164,7 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } else listaProgetto.appendChild(listItem);
     });
   }
-
+ 
   //INSERIMENTO NUOVA TASK
   //  mostra add Task Modal
   window.showAddTaskModal = function () {
@@ -190,6 +200,34 @@ document.addEventListener("DOMContentLoaded", function () {
     addTaskForm.reset();
     closeAddTaskModal();
   }
+
+     //RIMOZIONE USER ASSEGNATO
+
+
+async function removeUserFromTask(taskID){
+    try {
+        const response = await fetch(
+          `http://localhost:8080/api/tasks/unassign/${taskID}`,
+          {
+            method: "GET",
+            headers: {
+              token: token,
+            },
+          }
+        );
+        if (response.status === 200) {
+          document.getElementById("task-list").innerHTML = "";
+          showTasks();
+        }
+      } catch (error) {
+        console.error("Error completing task:", error);
+      }
+}
+
+
+  window.unassignUser = function(taskID){
+    removeUserFromTask(taskID)
+}
 
   //PER SALVARE NUOVA TASK A DB
   async function saveTask() {

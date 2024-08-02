@@ -1,0 +1,181 @@
+
+/* Contenitore principale */
+.container {
+  margin-left: 0;
+  transition: margin-left 0.3s ease;
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px; /* Padding laterale per schermi piccoli */
+}
+
+/* Media query per schermi più grandi di 1100px ma non più grandi di 1400px */
+@media (min-width: 1100px) and (max-width: 1400px) {
+  .container {
+      max-width: 1280px;
+      margin-left: 50px;
+      margin-right: 100px;
+      padding: 0; /* Rimuove il padding laterale per schermi medi */
+  }
+}
+
+/* Media query per schermi più grandi di 1400px */
+@media (min-width: 1400px) {
+  .container {
+      max-width: 1650px;
+      margin-left: 50px;
+      margin-right: 100px;
+      padding: 0; /* Rimuove il padding laterale per schermi grandi */
+  }
+}
+
+/* Media query per schermi enormi */
+@media (min-width: 1650px) {
+  .container {
+      max-width: 3000px;
+      margin-left: 100px;
+      margin-right: 100px;
+      padding: 0; /* Rimuove il padding laterale per schermi enormi */
+  }
+}
+
+/* Allineamento prima row */
+.row.align-items-stretch {
+align-items: stretch;
+}
+
+
+/* Media query per schermi più grandi di 1100px ma non più grandi di 1400px */
+@media (min-width: 1100px) and (max-width: 1400px) {
+  .sidebar-container {
+    max-width: 60%; /* Adatta la larghezza della sidebar al contenuto */
+}
+}
+
+/* Media query per schermi più grandi di 1400px */
+@media (min-width: 1400px) {
+  .sidebar-container {
+    max-width: 50%; /* Adatta la larghezza della sidebar al contenuto */
+}
+}
+/* Media query per schermi enormi */
+@media (min-width: 1650px) {
+  .sidebar-container {
+    max-width: 40%; /* Adatta la larghezza della sidebar al contenuto */
+}
+}
+
+/* Testo di benvenuto */
+#benvenuto {
+    text-align: center;
+    justify-content: center;
+    font-size: 35px;
+}
+
+
+/* card progetto attuale */
+body {
+    background-color: #000;
+  }
+
+
+  /* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  margin: 0;
+  padding: 0;
+}
+/* card hp consulente */
+.card {
+    background-color: #332f2f;
+    color: white;
+    box-shadow: -22px 24px 11px 3px rgba(0,0,0,0.1);
+}
+.text-primary {
+color: white;
+}
+
+/* Sidebar Container */
+.sidebar-container {
+  flex: 2;
+  width: 100%;
+  max-width: 800px; /* Limita la larghezza del medagliere e della barra di avanzamento */
+  margin-left: 50px;
+  margin-top: 50px;
+  background-color: transparent !important;
+}
+
+/* medagliere */
+.medagliere-section {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.badges-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  max-width: 100%;
+}
+
+.badge {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #f1f1f1;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.badge img {
+  width: 80px;
+  height: 80px;
+}
+
+.badge:hover {
+  transform: scale(1.1);
+}
+
+
+/* Stili per la progress-section */
+.progress-section {
+  text-align: center; /* Centra l'intera sezione di progresso */
+}
+
+.progress-bar-container {
+  width: 400px;
+  margin: 0 auto; /* Centra il contenitore della progress bar orizzontalmente */
+}
+
+.progress {
+  display: flex;
+  align-items: center; /* Allinea verticalmente al centro */
+  padding: 15px;
+  background: white;
+
+}
+
+.progress-bar {
+  height: 25px;
+  border-radius: 20px;
+  width: 60%; /* Imposta la larghezza iniziale della barra di progresso */
+  animation: progressAnimation 7s;
+  background: blue; /* Colore della barra di progresso */
+}
+
+.progress-text {
+  font-size: 16px;
+  color: #333;
+  margin-top: 10px; /* Spazio tra la barra di progresso e il testo */
+}
+
+@keyframes progressAnimation {
+  0% { width: 0%; }
+  80% { width: 85%; }
+  100% { width: 100%; }
+}

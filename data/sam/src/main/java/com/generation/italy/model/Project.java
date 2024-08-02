@@ -2,7 +2,6 @@ package com.generation.italy.model;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import com.generation.italy.model.AuthRequest;
 import com.generation.italy.model.AuthResponse;
 import com.generation.italy.model.Role;
 import com.generation.italy.model.User;
+import com.generation.italy.service.RoleService;
 import com.generation.italy.service.TokenService;
 import com.generation.italy.service.UserService;
 
@@ -29,7 +31,8 @@ public class AuthController {
 
     @Autowired
     private TokenService tokenService;
-
+    @Autowired
+private RoleService roleService; 
     // Endpoint per il login
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
@@ -49,6 +52,7 @@ public class AuthController {
 
     // Endpoint per il logout
     @PostMapping("/logout")
+    //da rifare perché usa vecchia auth
     public void logout(HttpServletRequest request) {
     	String token = request.getSession().getAttribute("token").toString();
     	System.out.println(token);
@@ -57,4 +61,17 @@ public class AuthController {
     	request.getSession().removeAttribute("token");
     	request.getSession().removeAttribute("logged");
     }
+    
+    @PostMapping("/register/{roleID}")
+    public ResponseEntity<AuthResponse> userRegister(@RequestBody User user, @PathVariable Long roleID) {
+        User newUser = new User();
+        newUser.setEmail(user.getEmail());
+        newUser.setNomeCompleto(user.getNomeCompleto());
+        newUser.setPassword(user.getPassword());
+        newUser.setRole(roleService.getRoleById(roleID));
+        newUser = userService.createUser(newUser);
+        String token = tokenService.createToken(newUser.getId()).getToken();
+        return new ResponseEntity<AuthResponse>(new AuthResponse(token, newUser.getRole()), HttpStatus.ACCEPTED);
+    }
+    
 }
