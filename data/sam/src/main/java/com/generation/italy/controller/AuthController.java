@@ -7,13 +7,16 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.generation.italy.exception.UnauthorizedException;
 import com.generation.italy.model.AuthRequest;
 import com.generation.italy.model.AuthResponse;
 import com.generation.italy.model.Role;
+import com.generation.italy.model.Task;
 import com.generation.italy.model.User;
 import com.generation.italy.service.RoleService;
 import com.generation.italy.service.TokenService;
@@ -52,14 +55,12 @@ private RoleService roleService;
 
     // Endpoint per il logout
     @PostMapping("/logout")
-    //da rifare perché usa vecchia auth
-    public void logout(HttpServletRequest request) {
-    	String token = request.getSession().getAttribute("token").toString();
-    	System.out.println(token);
-        // Elimina il token dal database per effettuare il logout
+    public void logout(@RequestHeader String token) {
+		User user = userService.getUserById(tokenService.findByToken(token).getUser_id())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found for this id"));
+		// Elimina il token dal database per effettuare il logout
+		if (user != null) 
     	tokenService.deleteByToken(token);
-    	request.getSession().removeAttribute("token");
-    	request.getSession().removeAttribute("logged");
     }
     
     @PostMapping("/register/{roleID}")

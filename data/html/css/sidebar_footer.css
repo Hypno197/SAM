@@ -145,10 +145,21 @@
   }
 
 .main-menu:hover ~ .container {
-    transition: 1s;
-    margin-left: 250px; /* Margine sinistro per fare spazio alla sidebar aperta */
+    rotate: 1px;
+    transition: ease-out 0.3s;
+    margin-left: 150px; /* Margine sinistro per fare spazio alla sidebar aperta */
 }
 
+.main-menu:hover ~ .container-fluid {
+    rotate : 1px;
+    transition:  0.3s;
+    margin-left: 150px; /* Margine sinistro per fare spazio alla sidebar aperta */
+}
+
+.main-menu:hover ~ .row {
+    transition: ease-out 0.3s;
+    margin-left: 190px; /* Margine sinistro per fare spazio alla sidebar aperta */
+}
 /* Stili generali */
 a:hover, a:focus {
     text-decoration: none;

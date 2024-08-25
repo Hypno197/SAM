@@ -20,8 +20,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.generation.italy.exception.UnauthorizedException;
 import com.generation.italy.model.Filter;
+import com.generation.italy.model.Milestone;
 import com.generation.italy.model.Task;
 import com.generation.italy.model.User;
+import com.generation.italy.service.MilestoneService;
 import com.generation.italy.service.TaskService;
 import com.generation.italy.service.TokenService;
 import com.generation.italy.service.UserService;
@@ -40,7 +42,10 @@ public class TaskController {
 
 	@Autowired
 	private TokenService tokenService;
-
+	
+	@Autowired
+	private MilestoneService milestoneService;
+	
 	@GetMapping
 	public List<Task> getAllTasks() {
 		return taskService.getAllTasks();
@@ -48,6 +53,7 @@ public class TaskController {
 
 	@GetMapping("/manager")
 	public List<Task> getManagerTasks(@RequestHeader String token) {
+		milestoneService.updateValue();
 		User user = userService.getUserById(tokenService.findByToken(token).getUser_id())
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found for this id"));
 		if (user != null && user.getRole().getIsAdmin()) {
@@ -57,6 +63,7 @@ public class TaskController {
 	}
 	@GetMapping("/user")
 	public List<Task> getUserTasks(@RequestHeader String token) {
+		milestoneService.updateValue();
 		User user = userService.getUserById(tokenService.findByToken(token).getUser_id())
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found for this id"));
 		if (user != null) {
@@ -79,8 +86,9 @@ public class TaskController {
 		if (user != null && user.getRole().getIsAdmin()) {
 			task.setOwnerID(user.getId());
 			task.setStart_date(LocalDate.now());
-			System.out.println(task.toString());
-			return taskService.createTask(task);
+			task = taskService.createTask(task);
+			milestoneService.updateValue();
+			return task;
 		} else
 			throw new UnauthorizedException();
 	}
@@ -92,7 +100,9 @@ public class TaskController {
 		if (user != null && user.getRole().getIsAdmin()) {
 		Task task = taskService.getTaskById(taskId).orElseThrow(
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found for this id :: " + taskId));
+		taskDetails.setStatus(task.getStatus());
 		Task updatedTask = taskService.updateTask(taskId, taskDetails);
+			milestoneService.updateValue();
 		return ResponseEntity.accepted().body(updatedTask);
 		} else
 			throw new UnauthorizedException();
@@ -106,6 +116,7 @@ public class TaskController {
 		Task task = taskService.getTaskById(taskId).orElseThrow(
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found for this id :: " + taskId));
 		taskService.deleteTask(taskId);
+		milestoneService.updateValue();
 		return ResponseEntity.ok().<Void>build();
 		} else
 			throw new UnauthorizedException();
@@ -114,7 +125,8 @@ public class TaskController {
 	@PutMapping("/changestatus/{task_id}/{status_id}")
 	public ResponseEntity<Task> changeStatus(@PathVariable(value = "task_id") Long taskId,
 			@PathVariable(value = "status_id") Long statusID) {
-		return new ResponseEntity<Task>(taskService.setStatus(taskId, statusID), HttpStatus.ACCEPTED);
+		milestoneService.updateValue();
+		return new ResponseEntity<Task>(taskService.setStatus(taskId, statusID), HttpStatus.ACCEPTED);	
 	}
 	
 	@GetMapping("/complete/{id}")
@@ -122,6 +134,7 @@ public class TaskController {
 		User user = userService.getUserById(tokenService.findByToken(token).getUser_id())
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found for this id"));
 		if (user != null ) {
+			milestoneService.updateValue();
 			return ResponseEntity.ok().body(taskService.setCompletion(id));			
 	}else
 		throw new UnauthorizedException();
@@ -145,6 +158,26 @@ public class TaskController {
 		if (user != null && user.getRole().getIsAdmin()) {
 			System.out.println("task id = "+taskID);
 			return ResponseEntity.ok().body(taskService.unassignUser(taskID));
+	}else
+		throw new UnauthorizedException();
+	}
+	
+	@GetMapping("/selfassign/{taskID}")
+	public ResponseEntity<Task> selfassignTask(@RequestHeader String token, @PathVariable Long taskID){
+		User user = userService.getUserById(tokenService.findByToken(token).getUser_id())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found for this id"));
+		if (user != null) {
+			return ResponseEntity.ok().body(taskService.assignUser(taskID, user.getId()));
+	}else
+		throw new UnauthorizedException();
+	}
+	
+	@GetMapping("/milestone/{mileID}")
+	public ResponseEntity<List<Task>> findTaskByMilestone(@RequestHeader String token, @PathVariable Long mileID){
+		User user = userService.getUserById(tokenService.findByToken(token).getUser_id())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found for this id"));
+		if (user != null) {
+			return 			taskService.findTasksByMilestoneID(mileID);
 	}else
 		throw new UnauthorizedException();
 	}

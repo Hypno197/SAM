@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function populateSelectWithArray(array, selectId, nameProp, message) {
     const selectElement = document.getElementById(selectId);
     if (array.length > 0) {
-      selectElement.innerHTML = "<option>Nessuna scelta</option>";
+      selectElement.innerHTML = "<option value='0'>Nessuna scelta</option>";
       array.forEach((item) => {
         const option = document.createElement("option");
         option.value = item.id;
@@ -78,6 +78,8 @@ document.addEventListener("DOMContentLoaded", function () {
   let userArr = [];
   //tutti gli user associati a tutti i progetti del manager
   let allUsers = [];
+  //milestone associate al progetto
+  let mileArr = [];
   //costanti che puntano agli elementi sulla pagina
   const taskList = document.getElementById("task-list");
   const addTaskForm = document.getElementById("addTaskForm");
@@ -105,6 +107,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const taskDescription = task.task_desc;
         const taskPriority = task.status.status;
         const taskStatusColor = task.status.color;
+        let taskMilestoneName;
+        if(task.milestone != null){
+          taskMilestoneName = task.milestone.mile_name;
+        }
+        const taskValue = task.value;
         let taskEndDate = task.end_date;
         if (taskEndDate == null) taskEndDate = "Scadenza indefinita";
         const taskProjectID = task.project_id;
@@ -137,14 +144,15 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="widget-content-left col-2">
                 <div class="widget-heading">${taskUserName}</div>
                 <div class="widget-subheading">Scadenza: ${taskEndDate}</div>
-                <div class="badge border-1" style="background-color : ${taskStatusColor}">${taskPriority}</div>
+                <div class="badge border-1" style="background-color : ${taskStatusColor}">${taskPriority} <br> <br> ${taskValue} <i class="fa-solid fa-dragon" style="color:lime" ></i> </div>
             </div>
             <div class="ms-auto text-center col-8">
-            <div class="widget-subheading">Creata il: ${task.start_date}</div>
-                <div class="widget-heading">${taskName}</div>
-                <div class="widget-subheading">${taskDescription}</div>
+            <span class="badge text-bg-dark">${taskMilestoneName}</span>
+            <div class="widget-heading">${taskName}</div>
+            <div class="widget-subheading">${taskDescription}</div>
             </div>
-        <div class="widget-content-right col-2">
+            <div class="widget-content-right col-2">
+            <div class="widget-subheading">Creata il: ${task.start_date}</div>
             <div class="dropdown-center" id="dropdown">
   
                 <button class="btn btn-outline-secondary border-0"  type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -288,12 +296,19 @@ document.addEventListener("DOMContentLoaded", function () {
     //valori form
     const taskName = document.getElementById("newTaskName").value;
     const taskDescription = document.getElementById("newTaskDescription").value;
-    const taskStatusID = document.getElementById("newTaskPriority").value;
+    let taskStatusID = document.getElementById("newTaskPriority").value;
+    if(taskStatusID == 0){
+      taskStatusID = 1;
+    }
     const taskEndDate = document.getElementById("newTaskEndDate").value;
     const taskProjectID = document.getElementById("newTaskProjectID").value;
+    const taskValue = document.getElementById("newTaskValue").value;
+    const taskMilestoneID = document.getElementById("newTaskMilestoneID").value;
     let taskUserID = document.getElementById("newTaskUserID").value;
     //se user isNaN(se select contiene messaggio campo vuoto o altro che non sia un) setta user id NULL
-    if (isNaN(taskUserID)) taskUserID = null;
+    if (isNaN(taskUserID)) 
+      taskUserID = null;
+    console.log(taskUserID)
     try {
       const response = await fetch("http://localhost:8080/api/tasks", {
         method: "POST",
@@ -305,9 +320,13 @@ document.addEventListener("DOMContentLoaded", function () {
           task_name: taskName,
           task_desc: taskDescription,
           project_id: taskProjectID,
-          user_id: taskUserID,
+          userID: taskUserID,
           end_date: taskEndDate,
           completion_date: null,
+          value: taskValue,
+          milestone: {
+            id: taskMilestoneID
+          },
           status: {
             id: taskStatusID,
           },
@@ -339,14 +358,15 @@ document.addEventListener("DOMContentLoaded", function () {
           },
         }
       );
-      if (response.status === 200) console.log(response);
+      if (response.status === 200)
       {
         const data = await response.json();
         userArr = [];
         data.forEach((element) => {
           userArr.push(element);
         });
-      }
+      }else if (response.status === 404)
+        userArr = []
     } catch (error) {
       console.error("Error fetching users:", error);
     }
@@ -357,13 +377,48 @@ document.addEventListener("DOMContentLoaded", function () {
       "Non ci sono consulenti assegnati!"
     );
   }
+//riempe la select con le milestone associate al progetto
+async function fillMilestoneSelect(projectID) {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/milestones/project/${projectID}`,
+      {
+        method: "GET",
+        headers: {
+          token: token,
+        },
+      }
+    );
+    if (response.status === 200)
+    {
+      const data = await response.json();
+      mileArr = [];
+      data.forEach((element) => {
+        mileArr.push(element);
+     });
+    } else if (response.status === 404)
+      mileArr = []
+  } catch (error) {
+    console.error("Error fetching users:", error);
+  }
+  populateSelectWithArray(
+    mileArr,
+    "newTaskMilestoneID",
+    "mile_name",
+    "Non ci sono milestones per il progetto!"
+  );
+}
+
   //aggiorna la select dell'user con gli user associati al progetto valore della select
   document
     .getElementById("newTaskProjectID")
     .addEventListener("change", function () {
       let projectID = projectSelect.value;
       fillUserIDSelect(projectID);
+      fillMilestoneSelect(projectID);
       document.getElementById("newTaskUserID").removeAttribute("disabled");
+      document.getElementById("newTaskMilestoneID").removeAttribute("disabled");
+
     });
   ///
   //MODIFICA TASK
@@ -403,6 +458,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const taskStatusID = document.getElementById("updateTaskPriority").value;
     const taskEndDate = document.getElementById("updateTaskEndDate").value;
     console.log(taskID);
+    const taskValue = document.getElementById("updateTaskValue").value;
     try {
       const response = await fetch(
         `http://localhost:8080/api/tasks/${taskID}`,
@@ -417,6 +473,7 @@ document.addEventListener("DOMContentLoaded", function () {
             task_name: taskName,
             task_desc: taskDescription,
             end_date: taskEndDate,
+            value: taskValue,
             status: {
               id: taskStatusID,
             },
@@ -692,5 +749,4 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  //js per select dinamiche e riempimento
 });

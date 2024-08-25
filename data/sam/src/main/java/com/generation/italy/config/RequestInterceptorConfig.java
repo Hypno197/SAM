@@ -11,7 +11,6 @@ public class RequestInterceptorConfig implements WebMvcConfigurer {
       @Override
     public void addInterceptors(InterceptorRegistry registry) { 
         registry.addInterceptor(new RequestInterceptor()).addPathPatterns("/api/**");
-       
     } 
     //* We can register any number of interceptors with our spring application context 
 }

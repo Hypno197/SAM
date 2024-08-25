@@ -27,7 +27,9 @@ public class Project {
 	private String project_name;
 		
 	private LocalDate start_date, end_date, expected_date, completion_date;
-	
+	private String description;
+	private Integer total, value;
+
 	@NotBlank(message="status non valido")
 		private String status;
 	
@@ -47,6 +49,32 @@ public class Project {
 	joinColumns = @JoinColumn(name="project_id"),
 	inverseJoinColumns = @JoinColumn(name ="user_id"))
 	private List<User> projectUsers;
+
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	
+	public Integer getTotal() {
+		return total;
+	}
+
+	public void setTotal(Integer total) {
+		this.total = total;
+	}
+
+	public Integer getValue() {
+		return value;
+	}
+
+	public void setValue(Integer value) {
+		this.value = value;
+	}
 
 	public Long getId() {
 		return id;

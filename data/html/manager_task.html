@@ -221,22 +221,26 @@
             <span class="close" onclick="closeAddTaskModal()">&times;</span>
             <h2>Add Task</h2>
             <form id="addTaskForm">
-                <label for="newTaskName">Nome Task:</label>
+                <label for="taskName">Nome Task:</label>
                 <input type="text" id="newTaskName" name="taskName" required>
 
-                <label for="newTaskDescription">Descrizione:</label>
+                <label for="taskDescription">Descrizione:</label>
                 <input type="text" id="newTaskDescription" name="taskDescription">
                 <br>
-                <label for="newTaskPriority">Priorità:</label>
+                <label for="taskPriority">Priorità:</label>
                 <select id="newTaskPriority" name="taskPriority">
                 </select>
+                <label for="newTaskValue">Valore:</label>
+                <input type="number" id="newTaskValue" name="taskValue">
                 <br>
                 <label for="newTaskEndDate">Deadline:</label>
                 <input type="date" name="taskEndDate" id="newTaskEndDate">
                 <br>
                 <label for="newTaskProjectID">Progetto:</label>
                 <select name="newTaskProjectID" id="newTaskProjectID" value="0">
-
+                </select>
+                <label for="newTaskMilestoneID">Milestone:</label>
+                <select name="newTaskMilestoneID" disabled id="newTaskMilestoneID" value="0">
                 </select>
                 <br>
                 <label for="taskUserID">Consulente:</label>
@@ -289,13 +293,18 @@
                 <label for="newTaskPriority">Priorità:</label>
                 <select id="updateTaskPriority" name="updateTaskPriority">
                 </select>
+                <label for="updateTaskValue">Valore :</label>
+                <input type="number" id="updateTaskValue" name="updateTaskValue" required>
+
                 <br>
+
+                
                 <label for="newTaskEndDate">Deadline:</label>
                 <input type="date" name="updateTaskEndDate" id="updateTaskEndDate">
                 <br>
                 <br>
                 <br>
-                <button type="submit">modifica Task</button>
+                <button type="submit">Modifica Task</button>
 
             </form>
         </div>

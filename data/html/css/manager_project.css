@@ -5,25 +5,12 @@ h1, h2 {
 }
 
 /* Stile della tabella */
-#destinazioni-table {
-    width: 100%;
-    border-collapse: collapse;
+.table>:not(caption)>*>* {
+    background-color: #2a2727;
+    color: #e3dbdb;
+}
+#projectTable {
     margin-left : 50px;
-}
-
-#destinazioni-table thead {
-    background-color: #2bcb1cb0;
-    color: white;
-}
-
-#destinazioni-table th, #destinazioni-table td {
-    padding: 12px;
-    text-align: center;
-    border: 1px solid #dddddd;
-}
-
-#destinazioni-table tr:nth-child(even) {
-    background-color: #f2f2f2;
 }
 
 

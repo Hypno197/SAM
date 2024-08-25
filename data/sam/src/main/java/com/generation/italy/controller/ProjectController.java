@@ -26,6 +26,7 @@ import com.generation.italy.service.ProjectService;
 import com.generation.italy.service.TokenService;
 import com.generation.italy.service.UserService;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @CrossOrigin
@@ -116,9 +117,11 @@ public class ProjectController {
 		Project updatedProject = projectService.updateProject(projectId, projectDetails);
 		return new ResponseEntity<Project>(updatedProject, HttpStatus.FOUND);
 	}
-
+	
+	@Transactional
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteProject(@PathVariable(value = "id") Long projectId) {
+		
 		projectService.deleteProject(projectId);
 		return new ResponseEntity<String>("Progetto numero " + projectId + " eliminato con successo",
 				HttpStatus.ACCEPTED);

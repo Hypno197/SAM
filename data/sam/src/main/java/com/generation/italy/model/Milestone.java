@@ -11,19 +11,36 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name="milestones")
+@Table(name = "milestones")
 public class Milestone {
-	@Id 
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@NotBlank
-	private String mile_name, mile_desc, mile_status;
-	
+
+	private String mile_name, mile_desc, mile_icon;
+
+	private Integer mile_value, mile_total;
+
 	@NotNull
-	private Long project_id, owner_id;
-	
+	private Long projectID, owner_id;
+
 	private LocalDate start_date, end_date, completion_date;
+
+	public Integer getMile_value() {
+		return mile_value;
+	}
+
+	public Integer getMile_total() {
+		return mile_total;
+	}
+
+	public void setMile_total(Integer mile_total) {
+		this.mile_total = mile_total;
+	}
+
+	public void setMile_value(Integer mile_value) {
+		this.mile_value = mile_value;
+	}
 
 	public LocalDate getCompletion_date() {
 		return completion_date;
@@ -57,20 +74,20 @@ public class Milestone {
 		this.mile_desc = mile_desc;
 	}
 
-	public String getMile_status() {
-		return mile_status;
+	public String getMile_icon() {
+		return mile_icon;
 	}
 
-	public void setMile_status(String mile_status) {
-		this.mile_status = mile_status;
+	public void setMile_icon(String mile_icon) {
+		this.mile_icon = mile_icon;
 	}
 
-	public Long getProject_id() {
-		return project_id;
+	public Long getProjectID() {
+		return projectID;
 	}
 
-	public void setProject_id(Long project_id) {
-		this.project_id = project_id;
+	public void setProjectID(Long projectID) {
+		this.projectID = projectID;
 	}
 
 	public Long getOwner_id() {
@@ -96,5 +113,5 @@ public class Milestone {
 	public void setEnd_date(LocalDate end_date) {
 		this.end_date = end_date;
 	}
-	
+
 }

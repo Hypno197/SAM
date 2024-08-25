@@ -13,10 +13,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.generation.italy.exception.UnauthorizedException;
 import com.generation.italy.model.User;
+import com.generation.italy.service.TokenService;
 import com.generation.italy.service.UserService;
 
 import jakarta.validation.Valid;
@@ -25,50 +29,62 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/users")
 @CrossOrigin
 public class UserController {
-	
+
 	@Autowired
-    private UserService userService;
+	private UserService userService;
+	@Autowired
+	private TokenService tokenService;
 
-    @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return new ResponseEntity<List<User>>(userService.getAllUsers(), HttpStatus.ACCEPTED);
-    }
+	@GetMapping
+	public ResponseEntity<List<User>> getAllUsers() {
+		return new ResponseEntity<List<User>>(userService.getAllUsers(), HttpStatus.ACCEPTED);
+	}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable(value = "id") Long userId) {
-        Optional<User> user = userService.getUserById(userId);
-        if(user.isPresent()) {
-            return ResponseEntity.ok().body(user.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+	@GetMapping("/{id}")
+	public ResponseEntity<User> getUserById(@PathVariable(value = "id") Long userId) {
+		Optional<User> user = userService.getUserById(userId);
+		if (user.isPresent()) {
+			return ResponseEntity.ok().body(user.get());
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+	}
 
-    @PostMapping
-    public ResponseEntity<User > createUser(@Valid @RequestBody User user) {
-        return new ResponseEntity<User>(userService.createUser(user), HttpStatus.CREATED);
-    }
+	@GetMapping("/me")
+	public ResponseEntity<User> getUserByToken(@RequestHeader String token) {
+		User user = userService.getUserById(tokenService.findByToken(token).getUser_id())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found for this id"));
+		if (user != null) {
+			return ResponseEntity.ok().body(user);
+		} else
+			throw new UnauthorizedException();
+	}
 
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable(value = "id") Long userId, @Valid @RequestBody User userDetails) {
-        Optional<User> user = userService.getUserById(userId);
-        if(user.isPresent()) {
-            return ResponseEntity.ok(userService.updateUser(userId, userDetails));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+	@PostMapping
+	public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
+		return new ResponseEntity<User>(userService.createUser(user), HttpStatus.CREATED);
+	}
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable(value = "id") Long userId) {
-        Optional<User> user = userService.getUserById(userId);
-        if(user.isPresent()) {
-            userService.deleteUser(userId);
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-    
+	@PutMapping("/{id}")
+	public ResponseEntity<User> updateUser(@PathVariable(value = "id") Long userId,
+			@Valid @RequestBody User userDetails) {
+		Optional<User> user = userService.getUserById(userId);
+		if (user.isPresent()) {
+			return ResponseEntity.ok(userService.updateUser(userId, userDetails));
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteUser(@PathVariable(value = "id") Long userId) {
+		Optional<User> user = userService.getUserById(userId);
+		if (user.isPresent()) {
+			userService.deleteUser(userId);
+			return ResponseEntity.ok().build();
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+	}
 
 }

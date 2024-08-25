@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
   async function showTasks() {
     await getUserTasks();
     await fillProjectArr();
-    console.log(projectArr);
     taskArr.forEach((task) => {
       const taskID = task.id;
       const taskName = task.task_name;
@@ -31,6 +30,11 @@ document.addEventListener("DOMContentLoaded", function () {
       //status della task
       const taskPriority = task.status.status;
       const taskStatusColor = task.status.color;
+      const taskValue = task.value;
+      let taskMileName;
+      if (task.milestone.mile_name != null)
+        taskMileName = task.milestone.mile_name
+     else  taskMileName = "Nessuna milestone assegnata!"
       //scadenza
       let taskEndDate = task.end_date;
       const taskCreated = task.start_date;
@@ -44,7 +48,10 @@ document.addEventListener("DOMContentLoaded", function () {
       //
       let projectListItem = document.createElement("li");
       projectListItem.className = "p-2";
+      if(taskPriority!= "Completata")
       projectListItem.id = `listaProgetto${taskProjectID}`;
+      else 
+      projectListItem.id = `listaProgettoCompletato${taskProjectID}`;
       //TEMPLATE DEL NOME DELLA CATEGORIA
       projectListItem.innerHTML = `
             <h5 class="text-center">${taskProjectName}</h5>`;
@@ -59,13 +66,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div class="widget-content-wrapper">
                 <div class="col-2"> 
                 <div class="widget-content-left">
-                <div class="widget-heading border-1" style="color : ${taskStatusColor}">${taskPriority}</div>
-                <div class="widget-subheading">Creazione: <br>${taskCreated}</div>                
+                <div class="widget-heading border-1" style="color : ${taskStatusColor}">${taskPriority} <br><span class="badge text-bg-secondary">${taskValue} <i class="fa-solid fa-dragon" style="color:lime" ></i>    </span>  </div>
+                
+                <div class="widget-subheading">Creazione: <br>${taskCreated}</div>
                 <div class="widget-subheading ms-auto">Scadenza: <br>${taskEndDate}</div>   
                 </div>
                 </div>
                 <div class="col-8"> 
                 <div class="p-2 text-center border-start border-end">
+                <div class="widget-subheading">${taskMileName}</div>
                 <div class="widget-heading mb-2"><strong>${taskName}</strong></div>
                 <div class="widget-subheading">${taskDescription}</div>
                 </div>
@@ -87,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
             `;
       //
       let listaProgetto;
-      if (taskPriority == "completata") {
+      if (taskPriority == "Completata") {
         listaProgetto = document.getElementById(
           `listaProgettoCompletato${taskProjectID}`
         );
@@ -97,7 +106,8 @@ document.addEventListener("DOMContentLoaded", function () {
         );
       }
 
-      if (listaProgetto == null && taskPriority == "completata") {
+      if (listaProgetto == null && taskPriority == "Completata") {
+        if(complTaskList!=null)
         complTaskList.appendChild(projectListItem);
         projectListItem.appendChild(listItem);
       } else if (listaProgetto == null) {
@@ -141,7 +151,6 @@ document.addEventListener("DOMContentLoaded", function () {
         data.forEach((element) => {
           projectArr.push(element);
         });
-        console.log(projectArr);
       }
     } catch (error) {
       console.error("Error fetching projects:", error);
@@ -167,6 +176,8 @@ document.addEventListener("DOMContentLoaded", function () {
       );
       if (response.status === 200) {
         document.getElementById("task-list").innerHTML = "";
+        if (document.getElementById('completed-task-list'))
+        document.getElementById("completed-task-list").innerHTML ="";
         showTasks();
       }
     } catch (error) {
@@ -242,6 +253,9 @@ document.addEventListener("DOMContentLoaded", function () {
       console.error("Error completing task:", error);
     }
   }
+
+ 
+
   //funzione di servizio che prende 4 argomenti e riempe una select
   //array: lista di elementi che hanno una proprieta id e una proprieta "nome"
   //nameProp: definisce il "nome" ovvero quale sarà la casella che contiene il testo mostrato nella select

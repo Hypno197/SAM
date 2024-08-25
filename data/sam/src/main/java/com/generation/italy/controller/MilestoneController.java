@@ -37,9 +37,19 @@ public class MilestoneController {
         Milestone milestone = milestoneService.getMilestoneById(milestoneId);
         return ResponseEntity.ok().body(milestone);
     }
-
+    
+    @GetMapping("/project/{id}")
+    public ResponseEntity<List<Milestone>> getMilestonesByProject(@PathVariable(value="id") Long projectID) {
+    	List<Milestone> milestones = milestoneService.findByProject(projectID);
+    	if (milestones.size()>0) {
+    		return ResponseEntity.ok().body(milestones);
+    	}
+    	else return ResponseEntity.notFound().build();
+    }
+    
+    
     @PostMapping
-    public Milestone createMilestone(@Valid @RequestBody Milestone milestone) {
+    public Milestone createMilestone(@RequestBody Milestone milestone) {
         return milestoneService.createMilestone(milestone);
     }
 

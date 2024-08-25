@@ -7,13 +7,16 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.generation.italy.model.Filter;
+import com.generation.italy.model.Milestone;
 import com.generation.italy.model.Status;
 import com.generation.italy.model.Task;
+import com.generation.italy.repository.MilestoneRepository;
 import com.generation.italy.repository.StatusRepository;
 import com.generation.italy.repository.TaskRepository;
 import com.generation.italy.repository.UserRepository;
@@ -28,7 +31,11 @@ public class TaskService {
 	private StatusRepository statusRepository;
 	@Autowired
 	private UserRepository userRepository;
-
+	@Autowired
+	private MilestoneRepository milestoneRepository;
+	@Autowired
+	private MilestoneService milestoneService;
+	
 	public List<Task> getAllTasks() {
 		return taskRepository.findAll();
 	}
@@ -60,7 +67,9 @@ public class TaskService {
 		task.setTask_desc(taskDetails.getTask_desc());
 		task.setEnd_date(taskDetails.getEnd_date());
 		task.setStatus(taskDetails.getStatus());
-		return taskRepository.save(task);
+		task = taskRepository.save(task);
+		milestoneService.updateValue();
+		return task;
 	}
 
 	public Task setStatus(Long id, Long statusID) {
@@ -69,7 +78,9 @@ public class TaskService {
 		Status status = statusRepository.findById(statusID).orElseThrow(
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Status not found for this ID: " + statusID));
 		task.setStatus(status);
-		return taskRepository.save(task);
+		task = taskRepository.save(task);
+		milestoneService.updateValue();
+				return task;
 
 	}
 
@@ -79,7 +90,9 @@ public class TaskService {
 		task.setCompletion_date(LocalDate.now());
 		Status status = statusRepository.findByStatus("Completata");
 		task.setStatus(status);
-		return taskRepository.save(task);
+		task = taskRepository.save(task);
+		milestoneService.updateValue();
+		return task;
 	}
 
 	public Task assignUser(Long id, Long userID) {
@@ -126,6 +139,16 @@ public class TaskService {
 		else {
 			return ResponseEntity.notFound().build();
 		}
+		
+			
+		}
+	public ResponseEntity<List<Task>> findTasksByMilestoneID(Long mileID) {
+		Optional<Milestone> milestone = milestoneRepository.findById(mileID);
+		if (milestone.isPresent()) {
+			return new ResponseEntity<List<Task>>((taskRepository.findByMilestoneId(mileID)), HttpStatus.OK);
+		}
+		else return ResponseEntity.notFound().build();
+		
 	}
 
 }

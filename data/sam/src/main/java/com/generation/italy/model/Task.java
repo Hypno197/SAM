@@ -39,8 +39,30 @@ public class Task {
 	@ManyToOne
 	@JoinColumn(name= "status_id")
 	private Status status;
+
+	@ManyToOne
+	@JoinColumn(name= "milestone_id")
+	private Milestone milestone;
 	
+	private Integer value;
 	
+
+	public Integer getValue() {
+		return value;
+	}
+
+	public void setValue(Integer value) {
+		this.value = value;
+	}
+
+	public Milestone getMilestone() {
+		return milestone;
+	}
+
+	public void setMilestone(Milestone milestone) {
+		this.milestone = milestone;
+	}
+
 	public Status getStatus() {
 		return status;
 	}
